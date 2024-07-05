@@ -1,0 +1,387 @@
+basePath: /
+definitions:
+  handler.GetAllPeopleRespomse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/track.People'
+        type: array
+    type: object
+  handler.GetTasksRespomse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/track.Task'
+        type: array
+    type: object
+  handler.errorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  handler.statusResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  track.Filter:
+    properties:
+      address:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      passport_number:
+        type: integer
+      passport_serie:
+        type: integer
+      patronymic:
+        type: string
+      pelingation:
+        type: integer
+      surname:
+        type: string
+    type: object
+  track.People:
+    properties:
+      address:
+        type: string
+      name:
+        type: string
+      passport_number:
+        type: integer
+      passport_serie:
+        type: integer
+      patronymic:
+        type: string
+      surname:
+        type: string
+    required:
+    - address
+    - name
+    - passport_number
+    - passport_serie
+    - patronymic
+    - surname
+    type: object
+  track.Task:
+    properties:
+      description:
+        type: string
+      diff_time:
+        type: string
+      done:
+        type: boolean
+      end_time:
+        type: string
+      name:
+        type: string
+      start_time:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - description
+    - name
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API Server for TimeTracker Application
+  title: TimeTracker App API
+  version: "1.0"
+paths:
+  /api/tasks/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete a task
+      operationId: delete-task
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: deleteTask
+      tags:
+      - tasks
+    get:
+      consumes:
+      - application/json
+      description: get tasks by labor costs
+      operationId: get-tasks-by-labor-costs
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.GetTasksRespomse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: getTasksByLaborCosts
+      tags:
+      - tasks
+  /api/tasks/end/{id}:
+    put:
+      consumes:
+      - application/json
+      description: end a task
+      operationId: end-task
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: endTask
+      tags:
+      - tasks
+  /api/tasks/start/{id}:
+    put:
+      consumes:
+      - application/json
+      description: start a task
+      operationId: start-task
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: startTask
+      tags:
+      - tasks
+  /api/users:
+    get:
+      consumes:
+      - application/json
+      description: get people by filters
+      operationId: get-people-by-filters
+      parameters:
+      - description: filters
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/track.Filter'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.GetAllPeopleRespomse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: getPeopleByFilters
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: create user
+      operationId: create-user
+      parameters:
+      - description: user info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/track.People'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: createUser
+      tags:
+      - users
+  /api/users/{id}:
+    put:
+      consumes:
+      - application/json
+      description: update user
+      operationId: update-user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: user info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/track.People'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: updateUser
+      tags:
+      - users
+  /api/users/{id}/tasks:
+    post:
+      consumes:
+      - application/json
+      description: create a new task
+      operationId: create-task
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Task info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/track.Task'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: createTask
+      tags:
+      - tasks
+swagger: "2.0"
